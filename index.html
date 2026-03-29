@@ -4,61 +4,137 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>安七柒 ANCHIQ MUSIC STUDIO | 游戏配乐 & 声音设计</title>
-    <style>
-        /* 基础样式复位 */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif; background-color: #0a0a0a; color: #ffffff; line-height: 1.6; }
-        
-        /* 容器 */
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+<style>
+    /* 1. 全局样式设置 */
+    :root {
+        --main-red: #ff2442;
+        --bg-black: #0a0a0a;
+        --card-bg: #151515;
+        --text-gray: #888;
+    }
 
-        /* 头部导航/标题 */
-        header { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: radial-gradient(circle, #1a1a1a 0%, #0a0a0a 100%); }
-        h1 { font-size: 3.5rem; letter-spacing: 8px; margin-bottom: 10px; font-weight: 200; }
-        .subtitle { color: #888; font-size: 1rem; letter-spacing: 4px; text-transform: uppercase; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* 通用板块样式 */
-        section { padding: 80px 0; border-bottom: 1px solid #222; }
-        .section-title { font-size: 1.5rem; margin-bottom: 40px; color: #ff2442; display: flex; align-items: center; }
-        .section-title::after { content: ""; height: 1px; flex: 1; background: #333; margin-left: 20px; }
+    html {
+        scroll-behavior: smooth; /* 全局平滑滚动 */
+        background-color: var(--bg-black);
+    }
 
-        /* 核心：视频作品集网格 (四个位置) */
-        .portfolio-grid { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); /* 2列布局 */
-            gap: 30px; 
-        }
-        .portfolio-item { background: #151515; border-radius: 4px; overflow: hidden; transition: 0.3s; }
-        .portfolio-item:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(255, 36, 66, 0.2); }
-        .video-box { position: relative; padding-bottom: 56.25%; background: #000; }
-        .video-box iframe, .video-box video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+    body {
+        font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+        background-color: var(--bg-black);
+        color: #ffffff;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased; /* 苹果屏幕文字锐化 */
+        padding-bottom: 50px;
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+    /* 2. 头部展示区 */
+    header {
+        height: 80vh; /* 稍微缩小高度，让用户能看到下方的作品 */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background: radial-gradient(circle, #1a1a1a 0%, #0a0a0a 100%);
+    }
+
+    h1 { font-size: 3.5rem; letter-spacing: 8px; margin-bottom: 10px; font-weight: 200; }
+    .subtitle { color: var(--text-gray); font-size: 1rem; letter-spacing: 4px; text-transform: uppercase; }
+
+    /* 3. 板块通用样式 */
+    section { padding: 80px 0; border-bottom: 1px solid #222; }
+    .section-title { font-size: 1.5rem; margin-bottom: 40px; color: var(--main-red); display: flex; align-items: center; }
+    .section-title::after { content: ""; height: 1px; flex: 1; background: #333; margin-left: 20px; }
+
+    /* 4. 作品集网格与高级动效 */
+    .portfolio-grid { 
+        display: grid; 
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 30px; 
+    }
+
+    .portfolio-item { 
+        background: var(--card-bg); 
+        border-radius: 8px; 
+        overflow: hidden; 
+        border: 1px solid #222;
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); 
+        position: relative;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    .portfolio-item:hover { 
+        transform: translateY(-8px); 
+        box-shadow: 0 20px 40px rgba(255, 36, 66, 0.15); 
+        border-color: var(--main-red);
+    }
+
+    .video-box { position: relative; padding-bottom: 56.25%; background: #000; overflow: hidden; }
+    .video-box video, .video-box iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+    /* 播放提示图标 */
+    .video-box::before {
+        content: '▶';
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 2.5rem;
+        color: rgba(255, 255, 255, 0.4);
+        z-index: 1;
+        pointer-events: none;
+        transition: 0.3s;
+        opacity: 0;
+    }
+    .portfolio-item:hover .video-box::before { opacity: 1; color: var(--main-red); }
+
+    .video-info { padding: 20px; }
+    .video-tag { font-size: 0.75rem; color: var(--main-red); text-transform: uppercase; margin-bottom: 8px; display: block; font-weight: bold; }
+    .video-title { font-size: 1.1rem; font-weight: 500; }
+
+    /* 5. 团队与简介 */
+    .intro-content { display: grid; grid-template-columns: 1fr 1.5fr; gap: 50px; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
+    .tag { background: #222; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; color: #aaa; }
+
+    .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+    .member-card { border: 1px solid #333; padding: 25px; border-radius: 8px; transition: 0.3s; }
+    .member-card:hover { border-color: var(--text-gray); background: #111; }
+    .member-role { color: var(--text-gray); font-size: 0.85rem; margin-bottom: 5px; }
+    .member-name { font-weight: bold; font-size: 1.2rem; letter-spacing: 1px; }
+
+    /* 6. 底部联系栏 (移动端优化) */
+    .contact-section { text-align: center; background: #111; padding: 100px 20px; border-top: 1px solid #222; }
+    .contact-btn { 
+        display: inline-block; 
+        padding: 18px 50px; 
+        border: 1px solid var(--main-red); 
+        color: #fff; 
+        text-decoration: none; 
+        letter-spacing: 2px; 
+        font-weight: bold; 
+        border-radius: 50px; 
+        transition: 0.3s; 
+        margin-top: 30px;
+    }
+    .contact-btn:hover { background: var(--main-red); box-shadow: 0 0 30px rgba(255, 36, 66, 0.4); }
+
+    /* 7. 移动端适配响应式 */
+    @media (max-width: 768px) {
+        header { height: 60vh; }
+        h1 { font-size: 2.2rem; letter-spacing: 4px; }
+        .section-title { font-size: 1.2rem; }
+        .portfolio-grid { grid-template-columns: 1fr; gap: 20px; } /* 手机端一列显示 */
+        .intro-content { grid-template-columns: 1fr; gap: 30px; }
         .video-info { padding: 15px; }
-        .video-tag { font-size: 0.7rem; color: #ff2442; text-transform: uppercase; margin-bottom: 5px; display: block; }
-        .video-title { font-size: 1rem; font-weight: 500; }
-
-        /* 简介模块 */
-        .intro-content { display: grid; grid-template-columns: 1fr 1.5fr; gap: 50px; }
-        .intro-text p { margin-bottom: 20px; color: #ccc; }
-        .tag-list { display: flex; flex-wrap: wrap; gap: 10px; }
-        .tag { background: #222; padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; color: #aaa; }
-
-        /* 团队/合作伙伴 */
-        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .member-card { border: 1px solid #333; padding: 20px; border-radius: 4px; }
-        .member-name { font-weight: bold; font-size: 1.1rem; }
-        .member-role { color: #666; font-size: 0.85rem; }
-
-        /* 联系方式 */
-        .contact-section { text-align: center; background: #111; padding: 60px 20px; margin-top: 40px; }
-        .contact-btn { display: inline-block; padding: 15px 40px; border: 1px solid #ff2442; color: #ff2442; text-decoration: none; margin-top: 20px; transition: 0.3s; }
-        .contact-btn:hover { background: #ff2442; color: #fff; }
-
-        /* 响应式适配 */
-        @media (max-width: 768px) {
-            h1 { font-size: 2rem; }
-            .portfolio-grid, .intro-content { grid-template-columns: 1fr; }
-        }
-    </style>
+        .member-card { padding: 20px; }
+    }
+</style>
 </head>
 <body>
 
